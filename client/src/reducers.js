@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 import {
   NEW_GAME, TERMINATE_GAME, SUBMIT_RESULT, CLOSE_MODAL, SUBMIT_RESULT_FAILED, SUBMIT_RESULT_SUCCESS,
   START_TIMER, STOP_TIMER,
-  FETCH_RANKING, SET_RANKING, FETCH_RANKING_FAILED, CHANGE_MODAL_INPUT,
+  FETCH_RANKING, FETCH_RANKING_SUCCESS, FETCH_RANKING_FAILED, CHANGE_MODAL_INPUT,
 } from "./actions";
 import { FINAL_ROUND, INITIAL_POWER } from "./helpers/constants";
 import { calcNextPower } from './helpers/utils';
@@ -24,12 +24,7 @@ const initialState = {
     sumAbsError: 0,
   },
   ranking: {
-    array: [
-      {name: 'user3', power: 990, avgErr: 25.6},
-      {name: 'user1', power: 961, avgErr: 29.5},
-      {name: 'user2', power: 925, avgErr: 33.4},
-      {name: 'user4', power: 880, avgErr: 40.9},
-    ],
+    array: [],
     isFetching: false,
   }
 };
@@ -108,7 +103,7 @@ const rankingReducer = (state = initialState.ranking, action) => {
         ...state,
         isFetching: true,
       };
-    case SET_RANKING:
+    case FETCH_RANKING_SUCCESS:
       return {
         ...state,
         array: action.payload,

@@ -21,5 +21,6 @@
   },
   "devDependencies": {
     "ajv": "^6.3.0"
-  }
+  },
+  "proxy": "http://localhost:3001"
 }

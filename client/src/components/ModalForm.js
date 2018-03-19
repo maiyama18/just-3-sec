@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Button, Image, Table, Segment } from 'semantic-ui-react';
+import { Modal, Form, Button, Image } from 'semantic-ui-react';
 import axios from 'axios';
 
 import { getImgUrl } from '../helpers/utils';
@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { changeModalInput, closeModal, submitResult, submitResultFailed, submitResultSuccess } from '../actions';
 
 const ModalForm = ({
-                     power, avgError, imgUrl, inputValue, isSubmitting, showModal,
+                     power, avgError, imgUrl, modalInput, isSubmitting, showModal,
                      handleInput, handleSubmit, handleCancel,
                    }) => (
     <div>
@@ -21,7 +21,7 @@ const ModalForm = ({
             <Form>
               <Form.Field>
                 <label>Name</label>
-                <input placeholder='input name' value={inputValue} onChange={e => handleInput(e)}/>
+                <input placeholder='input name' value={modalInput} onChange={e => handleInput(e)}/>
               </Form.Field>
               <Form.Field>
                 <label>Power</label>
@@ -35,7 +35,7 @@ const ModalForm = ({
           </div>
         </Modal.Content>
         <Modal.Actions>
-          <Button positive onClick={() => handleSubmit(inputValue, power, avgError)}>Submit</Button>
+          <Button positive onClick={() => handleSubmit(modalInput, power, avgError)}>Submit</Button>
           <Button negative onClick={() => handleCancel()}>Cancel</Button>
         </Modal.Actions>
       </Modal>
@@ -43,8 +43,8 @@ const ModalForm = ({
 );
 
 const mapStateToProps = state => {
-  const {power, sumAbsError} = state.timer;
-  const {inputValue, isSubmitting, showModal} = state.game;
+  const { power, sumAbsError } = state.timer;
+  const { modalInput, isSubmitting, showModal } = state.game;
 
   const avgError = sumAbsError / FINAL_ROUND;
   const imgUrl = getImgUrl(power);
@@ -53,7 +53,7 @@ const mapStateToProps = state => {
     power,
     avgError,
     imgUrl,
-    inputValue,
+    modalInput,
     isSubmitting,
     showModal,
   }
@@ -61,14 +61,20 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   const handleSubmit = async (name, power, avgError) => {
     dispatch(submitResult());
-    const response = await axios('/api/results', {
-      name,
-      power,
-      avgError,
-    });
-    if (response.status === 200) {
+    try {
+      console.log({
+        name,
+        power,
+        avgError,
+      })
+      const response = await axios.post('/api/result', {
+        name,
+        power,
+        avgError,
+      });
       dispatch(submitResultSuccess());
-    } else {
+    } catch (error) {
+      console.log(error);
       dispatch(submitResultFailed());
     }
   };

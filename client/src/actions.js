@@ -9,10 +9,9 @@ export const SUBMIT_RESULT_FAILED = 'SUBMIT_RESULT_FAILED';
 // timer
 export const START_TIMER = 'START_TIMER';
 export const STOP_TIMER = 'STOP_TIMER';
-export const INCREMENT_ROUND = 'INCREMENT_ROUND';
 // ranking
 export const FETCH_RANKING = 'FETCH_RANKING';
-export const SET_RANKING = 'SET_RANKING';
+export const FETCH_RANKING_SUCCESS = 'FETCH_RANKING_SUCCESS';
 export const FETCH_RANKING_FAILED = 'FETCH_RANKING_FAILED';
 
 
@@ -48,15 +47,12 @@ export const stopTimer = now => ({
   type: STOP_TIMER,
   payload: now,
 });
-export const incrementRound = () => ({
-  type: INCREMENT_ROUND,
-});
 // ranking
 export const fetchRanking = () => ({
   type: FETCH_RANKING,
 })
-export const setRanking = rankingArray => ({
-  type: SET_RANKING,
+export const fetchRankingSuccess = rankingArray => ({
+  type: FETCH_RANKING_SUCCESS,
   payload: rankingArray,
 })
 export const fetchRankingFailed = () => ({
