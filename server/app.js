@@ -13,7 +13,7 @@ const port = process.env.PORT || 3001;
 // uncomment after placing your favicon in /public
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 const pool = new Pool();
 
@@ -39,7 +39,6 @@ pool.on('error', (err) => {
   app.get('/api/ranking', async (req, res) => {
     const rankingArray = await db.getRanking(pool);
 
-    console.log(rankingArray);
     res.send(rankingArray);
   });
 
