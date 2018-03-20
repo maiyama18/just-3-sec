@@ -5,7 +5,10 @@ import axios from 'axios';
 import { getImgUrl } from '../helpers/utils';
 import { FINAL_ROUND } from '../helpers/constants';
 import { connect } from 'react-redux';
-import { changeModalInput, closeModal, submitResult, submitResultFailed, submitResultSuccess } from '../actions';
+import {
+  changeModalInput, closeModal, fetchRanking, fetchRankingFailed, fetchRankingSuccess, submitResult, submitResultFailed,
+  submitResultSuccess
+} from '../actions';
 
 const ModalForm = ({
                      power, avgError, imgUrl, modalInput, isSubmitting, showModal,
@@ -29,7 +32,7 @@ const ModalForm = ({
               </Form.Field>
               <Form.Field>
                 <label>Average Error</label>
-                <p>{avgError} ms</p>
+                <p>{avgError.toFixed(3)} ms</p>
               </Form.Field>
             </Form>
           </div>
@@ -62,12 +65,7 @@ const mapDispatchToProps = dispatch => {
   const handleSubmit = async (name, power, avgError) => {
     dispatch(submitResult());
     try {
-      console.log({
-        name,
-        power,
-        avgError,
-      })
-      const response = await axios.post('/api/result', {
+      await axios.post('/api/result', {
         name,
         power,
         avgError,
@@ -76,6 +74,15 @@ const mapDispatchToProps = dispatch => {
     } catch (error) {
       console.log(error);
       dispatch(submitResultFailed());
+    }
+
+    dispatch(fetchRanking());
+    try {
+      const response = await axios.get('/api/ranking');
+      dispatch(fetchRankingSuccess(response.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(fetchRankingFailed());
     }
   };
   const handleCancel = () => {

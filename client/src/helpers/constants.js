@@ -1,4 +1,4 @@
-export const FINAL_ROUND = 1;
+export const FINAL_ROUND = 10;
 
 export const INITIAL_POWER = 100;
 export const MAX_POWER_CHANGE = 90;

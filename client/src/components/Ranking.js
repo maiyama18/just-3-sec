@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Image } from 'semantic-ui-react';
+import { Table, Image, Dimmer, Loader } from 'semantic-ui-react';
 import axios from 'axios';
 
 import { getImgUrl } from '../helpers/utils';
@@ -14,7 +14,7 @@ class Ranking extends Component {
     try {
       const response = await axios.get('/api/ranking');
       dispatch(fetchRankingSuccess(response.data));
-    } catch(error) {
+    } catch (error) {
       console.log(error);
       dispatch(fetchRankingFailed());
     }
@@ -25,33 +25,45 @@ class Ranking extends Component {
 
     return (
         <div>
-          <Table color='orange' unstackable>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Rank</Table.HeaderCell>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell>Image</Table.HeaderCell>
-                <Table.HeaderCell>Power</Table.HeaderCell>
-                <Table.HeaderCell>Avg. Err.</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
+          {
+            isFetching
+                ? (
+                    <Dimmer active inverted>
+                      <Loader inverted>Loading</Loader>
+                    </Dimmer>
+                )
+                : (
 
-            <Table.Body>
-              {array.map((userObj, i) => {
-                const { name, power, avgErr } = userObj;
-                const imgUrl = getImgUrl(power);
+                    <Table color='orange' unstackable>
+                      <Table.Header>
+                        <Table.Row>
+                          <Table.HeaderCell>Rank</Table.HeaderCell>
+                          <Table.HeaderCell>Name</Table.HeaderCell>
+                          <Table.HeaderCell>Image</Table.HeaderCell>
+                          <Table.HeaderCell>Power</Table.HeaderCell>
+                          <Table.HeaderCell>Avg. Err.</Table.HeaderCell>
+                        </Table.Row>
+                      </Table.Header>
 
-                return (
-                    <Table.Row key={i + name}>
-                      <Table.Cell>{i + 1}</Table.Cell>
-                      <Table.Cell>{name}</Table.Cell>
-                      <Table.Cell><Image src={imgUrl} size='mini'></Image></Table.Cell>
-                      <Table.Cell>{power}</Table.Cell>
-                      <Table.Cell>{avgErr}</Table.Cell>
-                    </Table.Row>
-                )})}
-            </Table.Body>
-          </Table>
+                      <Table.Body>
+                        {array.map((userObj, i) => {
+                          const { name, power, avgError } = userObj;
+                          const imgUrl = getImgUrl(power);
+
+                          return (
+                              <Table.Row key={i + name}>
+                                <Table.Cell>{i + 1}</Table.Cell>
+                                <Table.Cell>{name}</Table.Cell>
+                                <Table.Cell><Image src={imgUrl} size='mini'></Image></Table.Cell>
+                                <Table.Cell>{power}</Table.Cell>
+                                <Table.Cell>{avgError} ms</Table.Cell>
+                              </Table.Row>
+                          )
+                        })}
+                      </Table.Body>
+                    </Table>
+                )
+          }
         </div>
     );
   }

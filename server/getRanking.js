@@ -1,11 +1,13 @@
-function getRanking() {
-  return [
-    {name: 'user3', power: 990, avgErr: 25.6},
-    {name: 'user1', power: 961, avgErr: 29.5},
-    {name: 'user2', power: 825, avgErr: 33.4},
-    {name: 'user4', power: 780, avgErr: 40.9},
-    {name: 'user5', power: 680, avgErr: 60.9},
-  ]
+const getRanking = async (client) => {
+  try {
+    const results = await client.query('SELECT name, power, avgError FROM ranking ORDER BY power DESC LIMIT 20');
+
+    return results.rows;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.release();
+  }
 }
 
 module.exports = getRanking;
