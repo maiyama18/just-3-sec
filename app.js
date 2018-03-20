@@ -23,22 +23,28 @@ pool.on('error', (err) => {
 });
 
 (async () => {
-  await pool.query('CREATE TABLE IF NOT EXISTS ranking (id SERIAL PRIMARY KEY, name VARCHAR(100), power INTEGER NOT NULL, avgError NUMERIC NOT NULL)');
+  try {
+    await pool.query('CREATE TABLE IF NOT EXISTS ranking (id SERIAL PRIMARY KEY, name VARCHAR(100), power INTEGER NOT NULL, avgError NUMERIC NOT NULL)');
+  } catch (err) {
+    console.error(err.stack);
+  }
 
   app.post('/api/result', (req, res) => {
     const result = req.body;
     try {
       db.insertResult(pool, result);
-
       res.send('ok');
     } catch (err) {
-      console.log(err.stack);
-
+      console.error(err.stack);
       res.send('ng')
     }
   });
   app.get('/api/ranking', async (req, res) => {
-    const rankingArray = await db.getRanking(pool);
+    try {
+      const rankingArray = await db.getRanking(pool);
+    } catch (err) {
+      console.error(err.stack)
+    }
 
     res.send(rankingArray);
   });
