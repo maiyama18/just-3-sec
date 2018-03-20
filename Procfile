@@ -1,1 +1,1 @@
-web: node --harmony server/app.js
+web: npm start
