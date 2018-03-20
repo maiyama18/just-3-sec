@@ -97,7 +97,6 @@ const getGradePropsFromStartStop = (startedAt, round, isStarted) => {
   else if (!isStarted && round === 1) return DUMMY_GRADE_PROPS;
 
   const error = Math.abs((now - startedAt) - 3000);
-  console.log(error)
 
   return getGradeProps(error);
 }
