@@ -13,7 +13,7 @@ const port = process.env.PORT || 3001;
 // uncomment after placing your favicon in /public
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 const pool = new Pool();
 
