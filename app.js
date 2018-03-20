@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
+const { parse } = require('pg-connection-string');
 const db = require('./db');
 const { config } = require('dotenv');
 
@@ -15,7 +16,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 
-const pool = new Pool();
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 pool.on('error', (err) => {
   console.error('Error on idle client', err);
@@ -25,6 +28,7 @@ pool.on('error', (err) => {
 (async () => {
   try {
     await pool.query('CREATE TABLE IF NOT EXISTS ranking (id SERIAL PRIMARY KEY, name VARCHAR(100), power INTEGER NOT NULL, avgError NUMERIC NOT NULL)');
+    console.log('created table ranking')
   } catch (err) {
     console.error(err.stack);
   }
@@ -42,11 +46,10 @@ pool.on('error', (err) => {
   app.get('/api/ranking', async (req, res) => {
     try {
       const rankingArray = await db.getRanking(pool);
+      res.send(rankingArray);
     } catch (err) {
       console.error(err.stack)
     }
-
-    res.send(rankingArray);
   });
 
   app.listen(port, (err) => {
