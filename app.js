@@ -23,6 +23,8 @@ pool.on('error', (err) => {
 });
 
 (async () => {
+  await pool.query('CREATE TABLE IF NOT EXISTS ranking (id SERIAL PRIMARY KEY, name VARCHAR(100), power INTEGER NOT NULL, avgError NUMERIC NOT NULL)');
+
   app.post('/api/result', (req, res) => {
     const result = req.body;
     try {
